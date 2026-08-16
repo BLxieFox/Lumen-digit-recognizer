@@ -107,7 +107,7 @@ lumen/
 ### 1. 获取代码
 
 ```bash
-git clone https://github.com/<你的用户名>/lumen.git
+git clone https://github.com/BLxieFox/Lumen-digit-recognizer.git
 cd lumen
 ```
 

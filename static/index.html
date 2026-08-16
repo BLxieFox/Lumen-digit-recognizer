@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手写数字识别 · Neural Digit Reader</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">⌗</span>
+      <div class="brand-text">
+        <h1>手写数字识别</h1>
+        <p class="subtitle">Neural Digit Reader · 全连接神经网络 · 本地离线推理</p>
+      </div>
+    </div>
+    <div class="status">
+      <span class="status-dot" id="status-dot"></span>
+      <span class="status-text" id="status-text">连接中…</span>
+      <span class="status-chip" id="model-chip">模型加载中</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- 手写板 -->
+    <section class="panel board-panel">
+      <div class="panel-head">
+        <h2>手写板 <span class="en">Canvas</span></h2>
+        <div class="panel-tools">
+          <button id="btn-undo" class="tool-btn" title="撤销上一笔">↶ 撤销</button>
+          <button id="btn-clear" class="tool-btn" title="清空画板">清空</button>
+        </div>
+      </div>
+
+      <div class="board-wrap" id="board-wrap">
+        <canvas id="board"></canvas>
+        <div class="grid-overlay" aria-hidden="true"></div>
+        <div class="board-hint" id="board-hint">在此书写一个数字 0 – 9</div>
+      </div>
+
+      <div class="brush-row">
+        <span class="brush-label">画笔 <span class="mono" id="brush-val">26</span></span>
+        <input type="range" id="brush" min="6" max="44" value="26" step="1">
+        <span class="brush-note">粗细</span>
+      </div>
+    </section>
+
+    <!-- 识别结果 -->
+    <section class="panel result-panel">
+      <div class="panel-head">
+        <h2>识别结果 <span class="en">Prediction</span></h2>
+      </div>
+
+      <div class="prediction" id="prediction">
+        <div class="big-digit" id="big-digit">?</div>
+        <div class="confidence" id="confidence">—</div>
+      </div>
+
+      <div class="bars" id="bars">
+        <div class="bar-placeholder">书写后自动显示各数字概率</div>
+      </div>
+
+      <div class="meta mono" id="meta">等待输入…</div>
+    </section>
+
+    <!-- 设置 -->
+    <section class="panel side-panel">
+      <div class="panel-head">
+        <h2>设置 <span class="en">Settings</span></h2>
+      </div>
+
+      <div class="settings">
+        <div class="setting-group">
+          <h3>预处理 <span class="en">Preprocess</span></h3>
+
+          <label class="toggle">
+            <input type="checkbox" id="set-center" checked>
+            <span class="track"><span class="thumb"></span></span>
+            <span class="toggle-text">中心化 <small>重心裁剪</small></span>
+          </label>
+
+          <label class="toggle">
+            <input type="checkbox" id="set-normalize" checked>
+            <span class="track"><span class="thumb"></span></span>
+            <span class="toggle-text">尺寸归一化 <small>缩放至 20×20</small></span>
+          </label>
+
+          <div class="slider-row">
+            <div class="slider-head"><span>去噪阈值</span><span class="mono slider-val" id="thr-val">0.15</span></div>
+            <input type="range" id="set-threshold" min="0" max="0.6" step="0.01" value="0.15">
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>推理 <span class="en">Inference</span></h3>
+
+          <div class="slider-row">
+            <div class="slider-head"><span>温度 T</span><span class="mono slider-val" id="temp-val">1.0</span></div>
+            <input type="range" id="set-temperature" min="0.2" max="5" step="0.1" value="1.0">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-head"><span>显示 Top-K</span><span class="mono slider-val" id="topk-val">5</span></div>
+            <input type="range" id="set-topk" min="1" max="10" step="1" value="5">
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-head"><span>置信度阈值</span><span class="mono slider-val" id="conf-val">0.50</span></div>
+            <input type="range" id="set-conf" min="0.1" max="0.99" step="0.01" value="0.50">
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>交互 <span class="en">Interaction</span></h3>
+          <label class="toggle">
+            <input type="checkbox" id="set-auto" checked>
+            <span class="track"><span class="thumb"></span></span>
+            <span class="toggle-text">抬手自动识别 <small>release to predict</small></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 日志 -->
+    <section class="panel log-panel">
+      <div class="panel-head">
+        <h2>日志 <span class="en">Log</span></h2>
+        <button id="btn-clear-log" class="tool-btn">清空日志</button>
+      </div>
+      <div class="log" id="log"></div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

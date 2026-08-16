@@ -108,7 +108,6 @@ lumen/
 
 ```bash
 git clone https://github.com/BLxieFox/Lumen-digit-recognizer.git
-cd lumen
 ```
 
 ### 2. 安装依赖
